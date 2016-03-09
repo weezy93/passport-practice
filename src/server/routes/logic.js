@@ -1,5 +1,5 @@
 var pg = require('pg');
-var knex = require('../../../db/knex');
+var knex = require('../../../db/knex.js');
 function Users() {
   return knex('users');
 }
@@ -26,7 +26,10 @@ function createUser(req, res) {
       password: req.body.password
     }).returning('*')
     .then(function(result) {
-      res.json(req.body);
+      var email= req.body.email;
+      var password = req.body.password;
+
+      res.json({email: email, password: password});
     });
 }
 

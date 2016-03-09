@@ -19,6 +19,10 @@
       <label for="confirm">confirm password</label>
       <input type="password" name="confirm" value="same secret...">
     {% endif %}
+    <button type="button" name="button">log in</button>
+    {% if action = '/login'%}
+      <h4>Register <a href="/register">here</a></h4>
+    {% endif %}
     </form>
 
   </div>
