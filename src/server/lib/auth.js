@@ -1,6 +1,6 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var knex = require('../../db/knex.js');
+var knex = require('../../../db/knex.js');
 function Users() {
   return knex('users');
 }
@@ -12,11 +12,11 @@ passport.use(new LocalStrategy({
 function(email, password, done) {
     Users().where('email', email).select()
     .then(function(result) {
-      if ( result.rows.length === 0 ){
+      if ( result.length === 0 ){
         return done(null, false, {message: 'Email does not exist'});
       } else {
         if ( result.rows[0].password === password ){
-          return done(null, result.rows[0], {message: 'successful'});
+          return done(null, result[0], {message: 'successful'});
         } else {
           return done(null, false, {message: 'email and/or password does not match'});
         }
@@ -28,20 +28,9 @@ function(email, password, done) {
   })
 );
 
-
-// does user exist
-  // if yes, check password
-  // if no, handle error
-// check password
-  // correct
-    // yes? return user info
-    // no? handle error
-
-
-
-
 // sets the user to 'req.user' and establishes a session via a cookie
 passport.serializeUser(function(user, done) {
+  console.log('serializing');
   done(null, user.id);
 });
 

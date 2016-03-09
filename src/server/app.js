@@ -36,12 +36,12 @@ var session = require('express-session');
 var passport = require('./lib/auth');
 
 app.use(session({
-  secret: process.env.SECRET_KEY || 'change_me',
+  secret: 'testing',
   resave: false,
   saveUninitialized: true
   }));
 app.use(passport.initialize());
-app.use(passport.sessoin());
+app.use(passport.session());
 
 
 app.use(express.static(path.join(__dirname, '../client')));

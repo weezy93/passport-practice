@@ -14,15 +14,19 @@
       <input type="email" name="email" placeholder="you@mail.com">
     <br><br>
       <label for="password">password</label>
-      <input type="password" name="password" value="secret...">
+      <input type="password" name="password" placeholder="secret...">
+
     {% if action === '/register' %}
       <label for="confirm">confirm password</label>
-      <input type="password" name="confirm" value="same secret...">
+      <input type="password" placeholder="same secret...">
     {% endif %}
-    <button type="button" name="button">log in</button>
-    {% if action = '/login'%}
+
+    <button type="submit">log in</button>
+
+    {% if action === '/login' %}
       <h4>Register <a href="/register">here</a></h4>
     {% endif %}
+
     </form>
 
   </div>
