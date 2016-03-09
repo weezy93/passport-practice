@@ -24,6 +24,9 @@ function createUser(req, res) {
     Users().insert({
       email: req.body.email,
       password: req.body.password
+    }).returning('*')
+    .then(function(result) {
+      res.json(req.body);
     });
 }
 
