@@ -1,4 +1,6 @@
-function ensureAuthentication() {
+var bcrypt = require('bcrypt');
+
+function ensureAuthentication(req, res, next) {
   // check if user is authenticated
     // if no, redirect to login
     // if yes, call next()
@@ -9,7 +11,7 @@ function ensureAuthentication() {
     }
 }
 
-function loginRedirect() {
+function loginRedirect(req, res, next) {
   // check if user is authenticated
     // if not, call next()
     // if yes, redirect to main route
@@ -20,8 +22,34 @@ function loginRedirect() {
   }
 }
 
+function hash(password) {
+  return new Promise(function(resolve, reject){
+    bcrypt.hash(password, 10, function(err, hash){
+      if(err){
+        reject(err);
+      } else {
+        resolve(hash);
+      }
+    });
+  });
+}
+
+function checkPassword(password, hashed) {
+  return new Promise(function(resolve, reject) {
+    bcrypt.compare(password, hashed, function(error, result) {
+      if (error) {
+        reject('Passwords do not match');
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
 
 module.exports = {
   ensureAuthentication: ensureAuthentication,
-  loginRedirect: loginRedirect
+  loginRedirect: loginRedirect,
+  hash: hash,
+  checkPassword: checkPassword
 };

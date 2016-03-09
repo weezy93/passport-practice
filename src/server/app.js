@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var swig = require('swig');
 var Promise = require('bluebird');
+var flash = require('connect-flash');
 
 // *** routes *** //
 var routes = require('./routes/index.js');
@@ -43,6 +44,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use(flash());
 
 app.use(express.static(path.join(__dirname, '../client')));
 

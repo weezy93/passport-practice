@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var pg = require('pg');
 var knex = require('../../../db/knex');
-var helpers = require('../lib/auth');
+var helpers = require('../lib/helpers');
 
 var passport = require('../lib/auth');
 var LocalStrategy = require('passport-local');
@@ -15,25 +15,29 @@ router.get('/', helpers.ensureAuthentication, function(req, res, next) {
 });
 
 router.get('/login', helpers.loginRedirect, function(req, res, next) {
+  console.log(req.flash);
   res.render('form', {
     title: "Login",
     action: '/login',
-    method: 'post'
+    method: 'post',
+    message: req.flash()
   });
 });
 
-router.post('/login', function(req, res, next) {
+router.post('/login', helpers.loginRedirect, function(req, res, next) {
  passport.authenticate('local', function (err, user) {
    if (err) {
      return next(err);
    } else {
-     req.logIn(user, function(err, user){
+     req.logIn(user, function(err){
        if ( err ){
          return next(err);
        }
-      return res.render('index', {
-        title: "Welcome "+ req.user.email
-      });
+       req.flash('message', {
+         'status': 'success',
+          'message': 'Welcome!'
+        });
+       res.redirect('/');
      });
    }
  })(req, res, next);
@@ -61,11 +65,19 @@ router.post('/register', helpers.loginRedirect, function(req, res, next) {
     if ( result.length ) {
       res.send('this email already exists');
     } else {
-      Users().insert(req.body).then(function(){
-        res.json(req.body);
-      })
-      .catch(function(error){
-        console.log('error', error);
+      // hash and salt the password
+      helpers.hash(req.body.password)
+      .then(function(result){
+          Users().insert({
+            email: req.body.email,
+            password: result
+          }).returning('id')
+          .then(function(id){
+            // req.login();
+          })
+        .catch(function(error){
+          console.log('error', error);
+          });
       });
     }
   });

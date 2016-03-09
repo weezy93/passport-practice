@@ -8,6 +8,13 @@
   </head>
   <body>
     <a href="/"><h1>Home</h1></a>
+
+    {% if message.length %}
+      <div class="container alert alert-{{message[0].status}}">
+        <p> {{ message[0].message }}</p>
+      </div>
+    {% endif %}
+
     {% block content %}
     {% endblock %}
     <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
