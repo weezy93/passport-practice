@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}{% endblock %}
+
+
+{% block content %}
+<!-- used for login and register page -->
+  <div class="container">
+
+    <h1>{{ title }}</h1>
+
+    <form class="" action="{{ action }}" method="{{ method }}">
+      <label for="email">email</label>
+      <input type="email" name="email" placeholder="you@mail.com">
+    <br><br>
+      <label for="password">password</label>
+      <input type="password" name="password" value="secret...">
+    {% if action === '/register' %}
+      <label for="confirm">confirm password</label>
+      <input type="password" name="confirm" value="same secret...">
+    {% endif %}
+    </form>
+
+  </div>
+
+{% endblock %}
