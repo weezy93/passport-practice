@@ -15,7 +15,7 @@ function(email, password, done) {
       if ( result.length === 0 ){
         return done(null, false, {message: 'Email does not exist'});
       } else {
-        if ( result.rows[0].password === password ){
+        if ( result[0].password === password ){
           return done(null, result[0], {message: 'successful'});
         } else {
           return done(null, false, {message: 'email and/or password does not match'});
@@ -39,7 +39,7 @@ passport.deserializeUser(function(id, done) {
   // find user and return
   Users().where('id', id).select()
   .then(function(result){
-    done(null, result.rows);
+    done(null, result[0]);
   })
   .catch(function(error){
     done(error);

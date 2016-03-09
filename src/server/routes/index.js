@@ -14,7 +14,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', function(req, res, next) {
-  console.log('login page');
   // display form for email, password
   // logic.renderLoginPage(req, res);
   res.render('form', {
@@ -29,12 +28,20 @@ router.post('/login', function(req, res, next) {
    if (err) {
      return next(err);
    } else {
-     return res.redirect('/');
+     req.logIn(user, function(err, user){
+       if ( err ){
+         return next(err);
+       }
+      return res.render('index', {
+        title: "Welcome "+ req.user.email
+      });
+     });
    }
  })(req, res, next);
 });
 
 router.get('/logout', function(req, res, next) {
+  req.logout();
   res.render('index', {
     title: 'Successfully logged out'
   });
@@ -51,14 +58,23 @@ router.get('/register', function(req, res, next) {
 });
 
 router.post('/register', function(req, res, next) {
-  console.log(req.body);
-  // logic.createUser(req, res);
-  Users().insert(req.body).then(function(){
-    res.json(req.body);
-  })
-  .catch(function(error){
-    console.log('error', error);
+  Users().where('email', req.body.email).select()
+  .then(function(result){
+    if ( result.length ) {
+      res.send('this email already exists');
+    } else {
+      Users().insert(req.body).then(function(){
+        res.json(req.body);
+      })
+      .catch(function(error){
+        console.log('error', error);
+      });
+    }
   });
+});
+
+
+
   // Users().insert({
   //   email: req.body.email,
   //   password: req.body.password
@@ -69,7 +85,7 @@ router.post('/register', function(req, res, next) {
   //
   //   res.json({email: email, password: password});
   // });
-});
+
 
 
 module.exports = router;
